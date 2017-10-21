@@ -15,7 +15,7 @@ export default function connect(mapStateToProps) {
 
   return function wrapWithConnect(WrappedComponent) {
     class Connect extends Component {
-      static displayName = `Subscribe(${getDisplayName(WrappedComponent)})`;
+      static displayName = `Connect(${getDisplayName(WrappedComponent)})`;
 
       static contextTypes = {
         store: storeShape.isRequired,
