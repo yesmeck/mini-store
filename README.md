@@ -51,7 +51,7 @@ class Buttons extends React.Component {
   handleClick = (step) => () => {
     const { store } = this.props;
     const { count } = store.getState();
-    store.setState({ count + step });
+    store.setState({ count: count + step });
   }
 
   render() {
