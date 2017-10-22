@@ -20,11 +20,13 @@ Redux do a good job at this situation throgh keeping all state in store, then co
 
 ## Example
 
+[See this demo online.](https://codesandbox.io/s/mq6223x08p)
+
 ```javascript
 import { Provider, create, connect } from 'mini-store';
 
 class Counter extends React.Component {
-  contructor(props) {
+  constructor(props) {
     super(props);
 
     this.store = create({
@@ -56,7 +58,7 @@ class Buttons extends React.Component {
     return (
       <div>
         <button onClick={this.handleClick(1)}>+</button>
-        <button onClick={this.handleClick(0)}>-</button>
+        <button onClick={this.handleClick(1)}>-</button>
       </div>
     );
   }
