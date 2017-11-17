@@ -7,12 +7,12 @@ export default class Provider extends Component {
   }
 
   static childContextTypes = {
-    store: storeShape.isRequired,
+    miniStore: storeShape.isRequired,
   }
 
   getChildContext() {
     return {
-      store: this.props.store,
+      miniStore: this.props.store,
     };
   }
 

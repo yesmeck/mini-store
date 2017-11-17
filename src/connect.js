@@ -18,13 +18,13 @@ export default function connect(mapStateToProps) {
       static displayName = `Connect(${getDisplayName(WrappedComponent)})`;
 
       static contextTypes = {
-        store: storeShape.isRequired,
+        miniStore: storeShape.isRequired,
       };
 
       constructor(props, context) {
         super(props, context);
 
-        this.store = context.store;
+        this.store = context.miniStore;
         this.state = { subscribed: finnalMapStateToProps(this.store.getState(), props) };
       }
 

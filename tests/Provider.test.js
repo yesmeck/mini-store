@@ -7,13 +7,13 @@ test('store context', (done) => {
   const store = create({});
 
   const App = (props, context) => {
-    expect(context.store).toBe(store);
+    expect(context.miniStore).toBe(store);
     done();
     return 'hello';
   }
 
   App.contextTypes = {
-    store: PropTypes.any.isRequired,
+    miniStore: PropTypes.any.isRequired,
   }
 
   mount(
