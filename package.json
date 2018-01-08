@@ -8,6 +8,9 @@
     "build": "babel src -d lib",
     "prepack": "npm run build"
   },
+  "files": [
+    "lib"
+  ],
   "jest": {
     "setupFiles": [
       "./tests/setup.js"
