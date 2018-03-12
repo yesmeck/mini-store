@@ -4,7 +4,7 @@ A state store for React component.
 
 ## Motivation
 
-When you want share a component's state to another one, a commom pattern in React world is [lifting state up](https://reactjs.org/docs/lifting-state-up.html#lifting-state-up). But one problem of this pattern is performance, assume we have a component in following hierarchy:
+When you want to share a component's state to another one, a commom pattern in React world is [lifting state up](https://reactjs.org/docs/lifting-state-up.html#lifting-state-up). But one problem of this pattern is performance, assume we have a component in following hierarchy:
 
 ```javascript
 <Parent>
@@ -14,7 +14,7 @@ When you want share a component's state to another one, a commom pattern in Reac
 </Parent>
 ```
 
-`ChildA` want share state with `ChildB`, so you lifting `ChildA`'s state up to `Parent`. Now, when `ChildA`'s state changes, the whole `Parent` will rerender, includes `ChildC` which should not happen.
+`ChildA` want to share state with `ChildB`, so you lifting `ChildA`'s state up to `Parent`. Now, when `ChildA`'s state changes, the whole `Parent` will rerender, includes `ChildC` which should not happen.
 
 Redux do a good job at this situation throgh keeping all state in store, then component can subscribe state's changes, and only connected components will rerender. But 'redux' + 'react-reduxt' is overkill when you are writing a component library. So I wrote this little library, It's like Redux's store without "reducer" and "dispatch".
 
