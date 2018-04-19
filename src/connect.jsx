@@ -1,10 +1,14 @@
-import { createElement, Component } from 'react';
+import { default as React, createElement, Component } from 'react';
 import shallowEqual from 'shallowequal'
 import hoistStatics from 'hoist-non-react-statics';
 import { storeShape } from './PropTypes';
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+function isStateless(Component) {
+  return !Component.prototype.render;
 }
 
 const defaultMapStateToProps = () => ({});
@@ -62,12 +66,25 @@ export default function connect(mapStateToProps) {
         }
       }
 
+      getWrappedInstance() {
+        return this.wrappedInstance;
+      }
+
       render() {
-        return createElement(WrappedComponent, {
+        let props = {
           ...this.props,
           ...this.state.subscribed,
           store: this.store,
-        });
+        };
+
+        if (!isStateless(WrappedComponent)) {
+          props = {
+            ...props,
+            ref: (c) => this.wrappedInstance = c,
+          };
+        }
+
+        return <WrappedComponent {...props}/>;
       }
     }
 
