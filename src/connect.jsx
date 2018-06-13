@@ -71,17 +71,14 @@ export default function connect(mapStateToProps) {
       }
 
       render() {
-        let props = {
+        const props = {
           ...this.props,
           ...this.state.subscribed,
           store: this.store,
         };
 
         if (!isStateless(WrappedComponent)) {
-          props = {
-            ...props,
-            ref: (c) => this.wrappedInstance = c,
-          };
+          props.ref = (c) => this.wrappedInstance = c;
         }
 
         return <WrappedComponent {...props}/>;
