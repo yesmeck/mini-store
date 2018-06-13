@@ -40,22 +40,22 @@ export default function connect(mapStateToProps) {
         this.tryUnsubscribe();
       }
 
-      handleChange = () => {
+      handleChange = (state, callback) => {
         if (!this.unsubscribe) {
           return;
         }
 
-        const nextState = finnalMapStateToProps(this.store.getState(), this.props);
+        const nextState = finnalMapStateToProps(state, this.props);
         if (!shallowEqual(this.nextState, nextState)) {
           this.nextState = nextState;
-          this.setState({ subscribed: nextState });
+          this.setState({ subscribed: nextState }, callback);
         }
       };
 
       trySubscribe() {
         if (shouldSubscribe) {
           this.unsubscribe = this.store.subscribe(this.handleChange);
-          this.handleChange();
+          this.handleChange(this.store.getState());
         }
       }
 
@@ -71,17 +71,14 @@ export default function connect(mapStateToProps) {
       }
 
       render() {
-        let props = {
+        const props = {
           ...this.props,
           ...this.state.subscribed,
           store: this.store,
         };
 
         if (!isStateless(WrappedComponent)) {
-          props = {
-            ...props,
-            ref: (c) => this.wrappedInstance = c,
-          };
+          props.ref = (c) => this.wrappedInstance = c;
         }
 
         return <WrappedComponent {...props}/>;

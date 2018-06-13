@@ -58,7 +58,7 @@ class Buttons extends React.Component {
     return (
       <div>
         <button onClick={this.handleClick(1)}>+</button>
-        <button onClick={this.handleClick(1)}>-</button>
+        <button onClick={this.handleClick(-1)}>-</button>
       </div>
     );
   }

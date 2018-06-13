@@ -73,6 +73,24 @@ describe('stateless', () => {
 
     expect(wrapper.text()).toBe('hello world');
   });
+
+  test('call a callback after setState', () => {
+    const onUpdate = jest.fn();
+
+    store.setState({ count: 2 }, onUpdate);
+
+    expect(onUpdate).toBeCalled();
+  });
+
+  test('accept setState with function', () => {
+    store.setState((state) => ({ count: 1 }));
+
+    expect(store.getState().count).toBe(1);
+
+    store.setState((state) => ({ count: 2, prevCount: state.count }));
+
+    expect(store.getState().prevCount).toBe(1);
+  });
 });
 
 describe('stateful', () => {
