@@ -22,7 +22,7 @@ export default function create(initialState) {
 
     return function unsubscribe() {
       const index = listeners.indexOf(listener);
-      listeners.splice(index, 1);
+      index !== -1 && listeners.splice(index, 1);
     };
   }
 
