@@ -2,10 +2,14 @@ export default function create(initialState) {
   let state = initialState;
   const listeners = [];
 
-  function setState(partial) {
-    state = { ...state, ...partial };
+  function setState(updater, callback) {
+    if (typeof updater === 'function') {
+      updater = updater(state);
+    }
+
+    state = { ...state, ...updater };
     for (let i = 0; i < listeners.length; i++) {
-      listeners[i]();
+      listeners[i](state, callback);
     }
   }
 
