@@ -16,7 +16,7 @@ When you want to share a component's state to another one, a commom pattern in R
 
 `ChildA` want to share state with `ChildB`, so you lifting `ChildA`'s state up to `Parent`. Now, when `ChildA`'s state changes, the whole `Parent` will rerender, includes `ChildC` which should not happen.
 
-Redux do a good job at this situation throgh keeping all state in store, then component can subscribe state's changes, and only connected components will rerender. But 'redux' + 'react-reduxt' is overkill when you are writing a component library. So I wrote this little library, It's like Redux's store without "reducer" and "dispatch".
+Redux do a good job at this situation throgh keeping all state in store, then component can subscribe state's changes, and only connected components will rerender. But `redux` + `react-redux` is overkill when you are writing a component library. So I wrote this little library, It's like Redux's store without "reducer" and "dispatch".
 
 ## Example
 
