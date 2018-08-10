@@ -73,6 +73,64 @@ describe('stateless', () => {
 
     expect(wrapper.text()).toBe('hello world');
   });
+
+  test('mapStateToProps is invoked when own props changes', () => {
+    Connected = connect((state, props)  => ({
+      msg: `${state.msg} ${props.name}`
+    }))(StatelessApp);
+
+    class App extends React.Component {
+      state = {
+        name: 'world'
+      }
+
+      render() {
+        return (
+          <div>
+            <button onClick={() => this.setState({ name: 'there' })}>Click</button>
+            <Connected name={this.state.name} />
+          </div>
+        );
+      }
+    }
+
+    wrapper = mount(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    wrapper.find('button').simulate('click');
+
+    expect(wrapper.find(Connected).text()).toBe('hello there');
+  });
+
+  test('mapStateToProps is not invoked when own props is not used', () => {
+    const mapStateToProps = jest.fn((state) => ({ msg: state.msg }));
+    Connected = connect(mapStateToProps)(StatelessApp);
+
+    class App extends React.Component {
+      state = {
+        name: 'world'
+      }
+
+      render() {
+        return (
+          <div>
+            <button onClick={() => this.setState({ name: 'there' })}>Click</button>
+            <Connected name={this.state.name} />
+          </div>
+        );
+      }
+    }
+
+    wrapper = mount(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    wrapper.find('button').simulate('click');
+    expect(mapStateToProps).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('stateful', () => {

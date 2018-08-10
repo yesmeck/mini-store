@@ -1,6 +1,7 @@
 import { default as React, createElement, Component } from 'react';
 import shallowEqual from 'shallowequal'
 import hoistStatics from 'hoist-non-react-statics';
+import { polyfill } from 'react-lifecycles-compat';
 import { storeShape } from './PropTypes';
 
 function getDisplayName(WrappedComponent) {
@@ -25,11 +26,26 @@ export default function connect(mapStateToProps) {
         miniStore: storeShape.isRequired,
       };
 
+      static getDerivedStateFromProps(props, prevState) {
+        // using ownProps
+        if (mapStateToProps && mapStateToProps.length === 2 && props !== prevState.props) {
+          return {
+            subscribed: finnalMapStateToProps(prevState.store.getState(), props),
+            props,
+          }
+        }
+        return { props };
+      }
+
       constructor(props, context) {
         super(props, context);
 
         this.store = context.miniStore;
-        this.state = { subscribed: finnalMapStateToProps(this.store.getState(), props) };
+        this.state = {
+          subscribed: finnalMapStateToProps(this.store.getState(), props),
+          store: this.store,
+          props,
+        };
       }
 
       componentDidMount() {
@@ -44,7 +60,6 @@ export default function connect(mapStateToProps) {
         if (!this.unsubscribe) {
           return;
         }
-
         const nextState = finnalMapStateToProps(this.store.getState(), this.props);
         if (!shallowEqual(this.nextState, nextState)) {
           this.nextState = nextState;
@@ -87,6 +102,8 @@ export default function connect(mapStateToProps) {
         return <WrappedComponent {...props}/>;
       }
     }
+
+    polyfill(Connect);
 
     return hoistStatics(Connect, WrappedComponent);
   };
