@@ -1,5 +1,7 @@
 # mini-store
 
+[![Travis](https://img.shields.io/travis/yesmeck/mini-store.svg?style=flat-square)](https://travis-ci.org/yesmeck/mini-store)
+
 A state store for React component.
 
 ## Motivation
