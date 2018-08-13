@@ -61,8 +61,7 @@ export default function connect(mapStateToProps) {
           return;
         }
         const nextState = finnalMapStateToProps(this.store.getState(), this.props);
-        if (!shallowEqual(this.nextState, nextState)) {
-          this.nextState = nextState;
+        if (!shallowEqual(this.state.subscribed, nextState)) {
           this.setState({ subscribed: nextState });
         }
       };

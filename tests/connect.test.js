@@ -93,7 +93,6 @@ describe('stateless', () => {
         );
       }
     }
-
     wrapper = mount(
       <Provider store={store}>
         <App />
@@ -130,6 +129,40 @@ describe('stateless', () => {
     );
     wrapper.find('button').simulate('click');
     expect(mapStateToProps).toHaveBeenCalledTimes(2);
+  });
+
+  // https://github.com/ant-design/ant-design/issues/11723
+  test('rerender component when props changes', () => {
+    const Dummy = ({ visible }) => <div>{ visible && 'hello' }</div>
+    Connected = connect((state, props)  => ({
+      visible: state.visible === false ? props.ownVisible : state.visible
+    }))(Dummy);
+
+    class App extends React.Component {
+      state = {
+        visible: true,
+      }
+      render() {
+        return (
+          <div>
+            <button onClick={() => this.setState({ visible: false })}>Click</button>
+            <Connected ownVisible={this.state.visible} />
+          </div>
+        );
+      }
+    }
+
+    store = create({ visible: false });
+    wrapper = mount(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    wrapper.find('button').simulate('click');
+    expect(wrapper.find(Dummy).text()).toBe('');
+    store.setState({ visible: true });
+    wrapper.update();
+    expect(wrapper.find(Dummy).text()).toBe('hello');
   });
 });
 
