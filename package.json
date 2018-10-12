@@ -1,6 +1,6 @@
 {
   "name": "mini-store",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
