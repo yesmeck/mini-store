@@ -56,14 +56,16 @@ export default function connect(mapStateToProps) {
         this.tryUnsubscribe();
       }
 
+      shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state.subscribed, nextState.subscribed);
+      }
+
       handleChange = () => {
         if (!this.unsubscribe) {
           return;
         }
         const nextState = finnalMapStateToProps(this.store.getState(), this.props);
-        if (!shallowEqual(this.state.subscribed, nextState)) {
-          this.setState({ subscribed: nextState });
-        }
+        this.setState({ subscribed: nextState });
       };
 
       trySubscribe() {
