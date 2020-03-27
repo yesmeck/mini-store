@@ -1,13 +1,14 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { create, Provider, connect } from '../src';
+import { mount, ReactWrapper } from 'enzyme';
+import { create, Provider, connect } from '../index';
+import { Store } from '../types';
 
-let StatelessApp;
-let Connected;
-let store;
-let wrapper;
+let StatelessApp: React.FC<any>;
+let Connected: any;
+let store: Store<any>;
+let wrapper: ReactWrapper;
 
-class StatefulApp extends React.Component {
+class StatefulApp extends React.Component<{ msg: string, count: number }> {
   render() {
     return (
       <div>{this.props.msg}</div>
@@ -38,10 +39,6 @@ describe('stateless', () => {
     expect(wrapper.text()).toBe('halo');
   });
 
-  test('should not keep reference to wrappedComponent', () => {
-    expect(wrapper.find('Connect(StatelessApp)').instance().getWrappedInstance()).toBeUndefined();
-  });
-
   test('on rerender when unsubscribed state changes', () => {
     store.setState({ count: 1 });
 
@@ -57,11 +54,11 @@ describe('stateless', () => {
       </Provider>
     );
 
-    expect(wrapper.instance().unsubscribe).toBeUndefined();
+    expect((wrapper.instance() as any).unsubscribe).toBeUndefined();
   });
 
   test('pass own props to mapStateToProps', () => {
-    Connected = connect((state, props)  => ({
+    Connected = connect<{ msg: string }, { name: string }, { msg: string }>((state, props)  => ({
       msg: `${state.msg} ${props.name}`
     }))(StatelessApp);
 
@@ -75,7 +72,7 @@ describe('stateless', () => {
   });
 
   test('mapStateToProps is invoked when own props changes', () => {
-    Connected = connect((state, props)  => ({
+    Connected = connect<{ msg: string }, { name: string }, { msg: string }>((state, props)  => ({
       msg: `${state.msg} ${props.name}`
     }))(StatelessApp);
 
@@ -133,8 +130,11 @@ describe('stateless', () => {
 
   // https://github.com/ant-design/ant-design/issues/11723
   test('rerender component when props changes', () => {
-    const Dummy = ({ visible }) => <div>{ visible && 'hello' }</div>
-    Connected = connect((state, props)  => ({
+    interface Props {
+      visible: boolean;
+    }
+    const Dummy = ({ visible }: Props) => <div>{ visible && 'hello' }</div>
+    Connected = connect<Props, { ownVisible: boolean }, Props>((state, props)  => ({
       visible: state.visible === false ? props.ownVisible : state.visible
     }))(Dummy);
 
@@ -168,16 +168,14 @@ describe('stateless', () => {
 
 describe('stateful', () => {
   beforeEach(() => {
-    Connected = connect(state  => state)(StatefulApp);
+    Connected = connect<{ msg: string; count: number }, { msg: string }, { msg: string; count: number }>(state => state)(
+      StatefulApp,
+    );
     store = create({ msg: 'hello', count: 0 });
     wrapper = mount(
       <Provider store={store}>
         <Connected />
       </Provider>
     );
-  });
-
-  test('should keep reference to wrappedComponent', () => {
-    expect(wrapper.find('Connect(StatefulApp)').instance().getWrappedInstance()).toBeTruthy();
   });
 });

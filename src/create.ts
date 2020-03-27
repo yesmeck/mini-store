@@ -1,8 +1,15 @@
-export default function create(initialState) {
-  let state = initialState;
-  const listeners = [];
+import { Store } from './types';
 
-  function setState(partial) {
+export interface Listener {
+  (): void;
+}
+
+
+export function create<S = {}>(initialState: S): Store<S> {
+  let state = initialState;
+  const listeners: Listener[] = [];
+
+  function setState(partial: Partial<S>) {
     state = { ...state, ...partial };
     for (let i = 0; i < listeners.length; i++) {
       listeners[i]();
@@ -13,7 +20,7 @@ export default function create(initialState) {
     return state;
   }
 
-  function subscribe(listener) {
+  function subscribe(listener: Listener) {
     listeners.push(listener);
 
     return function unsubscribe() {

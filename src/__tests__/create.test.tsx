@@ -1,4 +1,4 @@
-import { create } from '../src';
+import { create } from '../index';
 
 test('create', () => {
   const store = create({ foo: true });
