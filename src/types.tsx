@@ -24,8 +24,6 @@ import {
   NamedExoticComponent
 } from 'react';
 
-import hoistNonReactStatics from 'hoist-non-react-statics';
-
 /**
  * This interface can be augmented by users to add default types for the root state when
  * using `react-redux`.
@@ -97,7 +95,7 @@ export type GetProps<C> = C extends ComponentType<infer P> ? P : never;
 export type ConnectedComponent<
   C extends ComponentType<any>,
   P
-> = NamedExoticComponent<JSX.LibraryManagedAttributes<C, P>> & hoistNonReactStatics.NonReactStatics<C> & {
+> = NamedExoticComponent<JSX.LibraryManagedAttributes<C, P>> & {
   WrappedComponent: C;
 };
 
