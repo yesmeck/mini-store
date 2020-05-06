@@ -18,16 +18,15 @@
     "esm"
   ],
   "dependencies": {
-    "@types/hoist-non-react-statics": "^3.3.1",
-    "@types/react-lifecycles-compat": "^3.0.1",
-    "@types/shallowequal": "^1.1.1",
     "hoist-non-react-statics": "^3.3.2",
     "prop-types": "^15.6.0",
     "react-lifecycles-compat": "^3.0.4",
-    "shallowequal": "^1.0.2",
-    "typescript": "^3.8.3"
+    "shallowequal": "^1.0.2"
   },
   "devDependencies": {
+    "@types/hoist-non-react-statics": "^3.3.1",
+    "@types/react-lifecycles-compat": "^3.0.1",
+    "@types/shallowequal": "^1.1.1",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@types/enzyme": "^3.10.5",
@@ -40,7 +39,8 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "standard-version": "^4.4.0",
-    "ts-jest": "^25.2.1"
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
