@@ -1,6 +1,7 @@
 import { default as React, Component } from 'react';
 import shallowEqual from 'shallowequal';
 import hoistStatics from 'hoist-non-react-statics';
+import { polyfill } from 'react-lifecycles-compat';
 import { MiniStoreContext } from './Provider';
 import { Store, MapStateToProps, DefaultRootState, Options, ConnectedState, ConnectProps } from './types';
 
@@ -98,6 +99,8 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
         return <WrappedComponent {...props} ref={this.props.miniStoreForwardedRef} />;
       }
     }
+
+    polyfill(Connect);
 
     if (options.forwardRef) {
       const forwarded = React.forwardRef((props: TOwnProps, ref) => {
