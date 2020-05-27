@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "prop-types": "^15.6.0",
     "shallowequal": "^1.0.2"
   },
   "devDependencies": {
