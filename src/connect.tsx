@@ -1,8 +1,15 @@
-import { default as React, Component } from 'react';
+import * as React from 'react';
 import shallowEqual from 'shallowequal';
 import hoistStatics from 'hoist-non-react-statics';
 import { MiniStoreContext } from './Provider';
-import { Store, MapStateToProps, DefaultRootState, Options, ConnectedState, ConnectProps } from './types';
+import {
+  Store,
+  MapStateToProps,
+  DefaultRootState,
+  Options,
+  ConnectedState,
+  ConnectProps,
+} from './types';
 
 function getDisplayName(WrappedComponent: React.ComponentType<any>) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -18,7 +25,7 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
   const finalMapStateToProps = mapStateToProps || defaultMapStateToProps;
 
   return function wrapWithConnect(WrappedComponent: React.ComponentType<any>) {
-    class Connect extends Component<
+    class Connect extends React.Component<
       TOwnProps & ConnectProps,
       ConnectedState<{}, Store<State>, {}>,
       Store
@@ -27,7 +34,10 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
 
       static contextType = MiniStoreContext;
 
-      static getDerivedStateFromProps(props: TOwnProps, prevState: ConnectedState<{}, Store<State>, {}>) {
+      static getDerivedStateFromProps(
+        props: TOwnProps,
+        prevState: ConnectedState<{}, Store<State>, {}>,
+      ) {
         // using ownProps
         if (mapStateToProps && mapStateToProps.length === 2 && props !== prevState.props) {
           return {
@@ -63,7 +73,10 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
       }
 
       shouldComponentUpdate(nextProps: ConnectProps, nextState: ConnectedState<any, any, any>) {
-        return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state.subscribed, nextState.subscribed);
+        return (
+          !shallowEqual(this.props, nextProps) ||
+          !shallowEqual(this.state.subscribed, nextState.subscribed)
+        );
       }
 
       handleChange = () => {
