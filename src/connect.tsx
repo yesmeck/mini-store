@@ -2,14 +2,29 @@ import * as React from 'react';
 import shallowEqual from 'shallowequal';
 import hoistStatics from 'hoist-non-react-statics';
 import { MiniStoreContext } from './Provider';
-import {
-  Store,
-  MapStateToProps,
-  DefaultRootState,
-  Options,
-  ConnectedState,
-  ConnectProps,
-} from './types';
+import { DefaultRootState, Store, StoreProp, GetProps, Matching, ConnectedComponent } from './types';
+
+export interface ConnectOptions {
+  /**
+   * If true, use React's forwardRef to expose a ref of the wrapped component
+   *
+   * @default false
+   */
+  forwardRef?: boolean;
+}
+
+/**
+* Infers the type of props that a connector will inject into a component.
+*/
+export interface ConnectProps {
+  miniStoreForwardedRef: React.Ref<any>;
+}
+
+export interface ConnectedState<TStateProps = {}, Store = {}, TOwnProps = {}> {
+  subscribed: TStateProps;
+  store: Store;
+  props: TOwnProps,
+}
 
 function getDisplayName(WrappedComponent: React.ComponentType<any>) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -18,17 +33,19 @@ function getDisplayName(WrappedComponent: React.ComponentType<any>) {
 const defaultMapStateToProps = () => ({});
 
 export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootState>(
-  mapStateToProps?: MapStateToProps<TStateProps, TOwnProps, State>,
-  options: Options = {},
+  mapStateToProps?: (state: State, ownProps: TOwnProps) => TStateProps,
+  options: ConnectOptions = {},
 ) {
   const shouldSubscribe = !!mapStateToProps;
-  const finalMapStateToProps = mapStateToProps || defaultMapStateToProps;
+  const finalMapStateToProps = mapStateToProps || defaultMapStateToProps as (() => TStateProps);
 
-  return function wrapWithConnect(WrappedComponent: React.ComponentType<any>) {
+  return function wrapWithConnect<
+    C extends React.ComponentType<Matching<TStateProps & StoreProp<State>, GetProps<C>>>
+  >(WrappedComponent: C): ConnectedComponent<C, TStateProps & StoreProp<State>, TOwnProps> {
     class Connect extends React.Component<
       TOwnProps & ConnectProps,
-      ConnectedState<{}, Store<State>, {}>,
-      Store
+      ConnectedState<TStateProps, Store<State>, TOwnProps>,
+      Store<State>
     > {
       static displayName = `Connect(${getDisplayName(WrappedComponent)})`;
 
@@ -36,7 +53,7 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
 
       static getDerivedStateFromProps(
         props: TOwnProps,
-        prevState: ConnectedState<{}, Store<State>, {}>,
+        prevState: ConnectedState<TStateProps, Store<State>, TOwnProps>,
       ) {
         // using ownProps
         if (mapStateToProps && mapStateToProps.length === 2 && props !== prevState.props) {
@@ -102,11 +119,11 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
       }
 
       render() {
-        let props = {
+        const props = {
           ...this.props,
           ...this.state.subscribed,
           store: this.store,
-        };
+        } as any;
 
         return <WrappedComponent {...props} ref={this.props.miniStoreForwardedRef} />;
       }
@@ -116,8 +133,9 @@ export function connect<TStateProps = {}, TOwnProps = {}, State = DefaultRootSta
       const forwarded = React.forwardRef((props: TOwnProps, ref) => {
         return <Connect {...props} miniStoreForwardedRef={ref} />;
       });
-      return hoistStatics(forwarded, WrappedComponent);
+      return hoistStatics(forwarded, WrappedComponent) as any;
     }
-    return hoistStatics(Connect, WrappedComponent);
+
+    return hoistStatics(Connect, WrappedComponent) as any;
   };
 }

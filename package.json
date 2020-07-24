@@ -3,11 +3,17 @@
   "version": "3.0.5",
   "main": "cjs/index.js",
   "module": "esm/index.js",
+  "types": "cjs/index.d.ts",
   "license": "MIT",
+  "homepage": "https://github.com/yesmeck/mini-store",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yesmeck/mini-store.git"
+  },
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir cjs",
+    "build:esm": "tsc --declaration",
+    "build:cjs": "tsc  --declaration --module commonjs --outDir cjs",
     "prepack": "npm run build",
     "release": "standard-version",
     "commitmsg": "commitlint -E GIT_PARAMS",

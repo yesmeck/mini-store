@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { Store, ProviderProps } from './types';
+import { Store } from './types';
 
 export const MiniStoreContext = React.createContext<Store | null>(null);
+
+export interface ProviderProps {
+  store: Store;
+}
 
 export class Provider extends React.Component<ProviderProps> {
   render() {
