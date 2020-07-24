@@ -17,7 +17,7 @@
     "prepack": "npm run build",
     "release": "standard-version",
     "commitmsg": "commitlint -E GIT_PARAMS",
-    "test": "jest"
+    "test": "jest src --coverage"
   },
   "files": [
     "cjs",

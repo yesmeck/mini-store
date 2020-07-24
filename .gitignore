@@ -1,5 +1,11 @@
+# build
 cjs/
 esm/
+
+# dependencies
 node_modules/
 yarn.lock
 yarn-error.log
+
+# test
+coverage/
