@@ -1,5 +1,7 @@
 # mini-store
 
+**Deprecated, see [use-context-selector](https://github.com/dai-shi/use-context-selector) for optimized state subscribtion**
+
 [![Travis](https://img.shields.io/travis/yesmeck/mini-store.svg?style=flat-square)](https://travis-ci.org/yesmeck/mini-store)
 
 A state store for React component.
